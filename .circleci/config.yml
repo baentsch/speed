@@ -56,8 +56,11 @@ jobs:
     steps:
       - checkout # change this from "checkout" to "*localCheckout" when running CircleCI locally
       - run:
+          name: check env
+          command: whoami 
+      - run:
           name: Install kvm components
-          command: apt-get update -y && apt-get upgrade -y && apt install apt-utils qemu qemu-kvm kmod -y 
+          command: sudo apt-get update -y && apt-get upgrade -y && apt install apt-utils qemu qemu-kvm kmod -y 
       - run:
           name: Test environment
           command: uname -r
