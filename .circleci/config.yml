@@ -50,7 +50,7 @@ jobs:
                   docker push $TARGETNAME/oqs-perf:latest 
 
   ubuntu_x64_kvm_bare:
-    description: A template for building a kvm-supporting executor 
+    description: A template for building a kvm-supporting executor  
     machine:
       image: ubuntu-1604:202010-01
     steps:
