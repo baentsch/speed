@@ -49,10 +49,52 @@ jobs:
                   docker tag oqs-perf $TARGETNAME/oqs-perf:latest &&
                   docker push $TARGETNAME/oqs-perf:latest 
 
+  ubuntu_x64_kvm_bare:
+    description: A template for building a kvm-supporting executor 
+    machine:
+      image: ubuntu-1604:202010-01
+    steps:
+      - checkout # change this from "checkout" to "*localCheckout" when running CircleCI locally
+      - run:
+          name: Install kvm components
+          command: apt-get update -y && apt-get upgrade -y && apt install apt-utils qemu qemu-kvm kmod -y 
+      - run:
+          name: Test environment
+          command: uname -r
+      - run:
+          name: Test setup
+          command: lsmod
+      - run:
+          name: Test kvm
+          command: kvm-ok
+
+  ubuntu_x64_kvm:
+    description: A template for building a kvm-based Docker image using Ubuntu Bionic 
+    docker:
+      - image: openquantumsafe/ci-ubuntu-bionic-x86_64:latest
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
+    steps:
+      - *localCheckout #checkout # change this from "checkout" to "*localCheckout" when running CircleCI locally
+      - setup_remote_docker
+      #- run:
+      #    name: Authenticate to Docker
+      #    command: echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+      - run:
+          name: add required packages & check kvm operation
+          command: |
+            apt-get update -y && apt-get upgrade -y && apt install apt-utils qemu qemu-kvm kmod -y && lsmod && modprobe kvm_intel && kvm-ok && ls cat /boot/config-*
+          working_directory: kvm
+
 workflows:
   version: 2.1
   build:
     jobs:
-      - ubuntu_x64_openssl:
-          name: ubuntu-bionic
+      - ubuntu_x64_kvm_bare:
+          name: ubuntu-bionic-kvm-bare
           context: openquantumsafe
+      #- ubuntu_x64_openssl:
+      #    name: ubuntu-bionic
+      #    context: openquantumsafe
+
