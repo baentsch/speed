@@ -60,7 +60,7 @@ jobs:
           command: whoami 
       - run:
           name: Install kvm components
-          command: sudo apt-get update -y && apt-get upgrade -y && apt install apt-utils qemu qemu-kvm kmod -y 
+          command: sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt install apt-utils qemu qemu-kvm kmod -y 
       - run:
           name: Test environment
           command: uname -r
