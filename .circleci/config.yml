@@ -69,7 +69,7 @@ jobs:
           command: lsmod
       - run:
           name: Test kvm
-          command: kvm-ok
+          command: sudo kvm-ok
 
   ubuntu_x64_kvm:
     description: A template for building a kvm-based Docker image using Ubuntu Bionic 
